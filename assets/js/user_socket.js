@@ -60,9 +60,25 @@ let channel = socket.channel("room:lobby", {});
 let list    = document.querySelector('#message-list');
 let message = document.querySelector('#message');
 let name    = document.querySelector('#name');
+let button  = document.querySelector('#send');
 
 message.addEventListener('keypress', event => {
-  if(event.keyCode == 13 && message.value.length > 0) {
+  if(event.keyCode == 13 && message.value.length > 0 && name.value.length > 0) {
+    channel.push('new_message', {name: name.value, message: message.value});
+    message.value = '';
+  } else if(event.keyCode == 13 && name.value.length == 0) {
+    alert('Please enter your name before sending a message.');
+  } else if(event.keyCode == 13 && message.value.length == 0) {
+    alert('Please enter a message before sending.');
+  } else if(event.keyCode == 13 && message.value.length == 0 && name.value.length == 0) {
+    alert('Please enter your name and a message before sending.');
+  } else {
+    return false;
+  }
+});
+
+button.addEventListener('click', event => {
+  if(message.value.length > 0) {
     channel.push('new_message', {name: name.value, message: message.value});
     message.value = '';
   }
